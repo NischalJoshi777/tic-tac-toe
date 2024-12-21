@@ -36,7 +36,9 @@ class _LocalRoomScreenState extends State<LocalRoomScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Game Over!'),
-        content: Text("Winner is ${LocalGameHelper.winner}"),
+        content: Text(LocalGameHelper.winner == "none"
+            ? 'Its a draw!'
+            : "Winner is ${LocalGameHelper.winner}"),
         actions: [
           TextButton(
               onPressed: () {
@@ -50,8 +52,9 @@ class _LocalRoomScreenState extends State<LocalRoomScreen> {
               child: const Text('Retry')),
           TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context); // Navigate back to the main screen
+                LocalGameHelper.resetGame();
+                Navigator.of(context)
+                    .popUntil((route) => route.settings.name == '/');
               },
               child: const Text('End Game')),
         ],

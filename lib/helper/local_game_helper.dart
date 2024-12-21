@@ -72,6 +72,8 @@ class LocalGameHelper {
         values[2] == values[6] &&
         values[2] != '') {
       winner = values[2];
+    } else if (!values.contains("")) {
+      winner = "none";
     }
   }
 }

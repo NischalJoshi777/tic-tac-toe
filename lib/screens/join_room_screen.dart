@@ -31,6 +31,13 @@ class JoinRoomScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: CustomTextEditField(
+                hintText: "Enter your game name,",
+              ),
+            ),
+            const SizedBox(height: 20.0),
             AppButton(onPressed: () {}, text: "Join"),
           ],
         ),

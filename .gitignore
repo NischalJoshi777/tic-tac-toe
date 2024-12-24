@@ -31,7 +31,7 @@ migrate_working_dir/
 .pub/
 /build/
 /lib/my_ip.dart
-
+backend/db.js
 
 # Symbolication related
 app.*.symbols

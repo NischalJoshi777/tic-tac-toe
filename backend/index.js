@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
+
 const Room = require("./models/room");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,8 +10,7 @@ var server = http.createServer(app);
 var io = require("socket.io")(server);
 
 app.use(express.json());
-const DB = "mongodb+srv://nischaljoshi77:test123@cluster0.4asop.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
+const DB = db;
 
 io.on("connection", (socket) => {
   console.log("connected!");

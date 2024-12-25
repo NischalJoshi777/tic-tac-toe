@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multiplayertictactoe/screens/create_room_screen.dart';
 import 'package:multiplayertictactoe/screens/join_room_screen.dart';
 import 'package:multiplayertictactoe/screens/local_room_screen.dart';
 import 'package:multiplayertictactoe/widgets/app_button.dart';
@@ -27,7 +28,16 @@ class MainScreen extends StatelessWidget {
               text: 'Join Room',
             ),
             const SizedBox(height: 12.0),
-            AppButton(onPressed: () {}, text: 'Create Room'),
+            AppButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CreateRoomScreen(),
+                  ),
+                );
+              },
+              text: 'Create Room',
+            ),
             const SizedBox(height: 12.0),
             AppButton(
                 onPressed: () {

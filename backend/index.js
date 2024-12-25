@@ -1,52 +1,54 @@
-const express = require("express");
+const express = require("express"); //importing the express
 const http = require("http");
-const mongoose = require("mongoose");
-
-const Room = require("./models/room");
+const mongoose = require("mongoose"); // It allows you to define schema for creating models in mongodb
 const app = express();
 const port = process.env.PORT || 3000;
 
 var server = http.createServer(app);
 var io = require("socket.io")(server);
 
+//converts the data into json format
 app.use(express.json());
+
+const db = require('./db.js'); // Import the constant
+
 const DB = db;
+const Room = require("./models/room");
 
-io.on("connection", (socket) => {
-  console.log("connected!");
-  socket.on("createRoom", async ({ nickname }) => {
-    console.log(nickname);
-    try {
-      // room is created
-      let room = new Room();
-      let player = {
-        socketID: socket.id,
-        nickname,
-        playerType: "X",//player creating room get x
-      };
+io.on('connection', (socket) => 
+    {console.log("connection set up")
+        socket.on('createRoom', async ({nickname}) => {
+            console.log(nickname);
+            try {
+                // room is created
+                let room = new Room();
+                let player = {
+                  socketID: socket.id,
+                  nickname,
+                  playerType: "X",
+                };
+                room.players.push(player);
+                room.turn = player;
 
-      room.players.push(player);
-      room.turn = player;
-      room = await room.save(); //stores data in mongo db
-      console.log(room);
-      //unique id created by mongoDB;
-      const roomId = room._id.toString();
-      socket.join(roomId);
-      io.to(roomId).emit("createRoomSuccess", room);
-    } catch (e) {
-      console.log(e);
+                room = await room.save(); //data saved in mongodb
+                console.log(room);
+                const roomId = room._id.toString(); // a unique id created my the mongodb.  
+                socket.join(roomId); // socket manipulates data to yourself.
+                io.to(roomId).emit("createRoomSuccess", room); //io sends data to everyone. //creating room has been sucessfull.
+              } catch (e) {
+                console.log(e);
+              }
+        });
+
     }
-  });
- });
+);
 
-mongoose.connect(DB)
-  .then(() => {
-    console.log("Connection established!");
-  })
-  .catch((e) => {
-    console.log(e);
-  });
+//establishing connection witht the DB.
+mongoose.connect(DB).then(() =>{
+    console.log("connection established");}
+).catch((e)=> {console.log(e);});
 
-  server.listen(port, "0.0.0.0", () => {
-    console.log(`Server started  on port ${port}`);
-  });
+//start listening to the server.
+server.listen(port, '0.0.0.0',()=>{
+    console.log(`Our server is started and is running in port `+ port);
+});

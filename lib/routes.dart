@@ -3,4 +3,5 @@ class RouteName {
   static String joinRoom = "/joinRoom";
   static String createRoom = "/createRoom";
   static String localRoom = "/localRoom";
+  static String gameScreen = "/gamescreen";
 }

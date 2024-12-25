@@ -7,7 +7,7 @@ class SocketClient {
 
   //defining a private named construction
   SocketClient._internal() {
-    socket = IO.io(my_ip, <String, dynamic>{
+    socket = IO.io(my_store_ip, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

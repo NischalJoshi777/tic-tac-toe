@@ -17,7 +17,7 @@ const roomSchema = new mongoose.Schema({
     default: 1,
   },
   players: [playerSchema],
-  isJoin: {
+  canJoin: {
     type: Boolean,
     default: true,
   },

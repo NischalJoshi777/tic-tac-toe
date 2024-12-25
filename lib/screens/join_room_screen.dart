@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:multiplayertictactoe/resources/socket_methods.dart';
 import 'package:multiplayertictactoe/widgets/app_button.dart';
 import 'package:multiplayertictactoe/widgets/app_header_text.dart';
 import 'package:multiplayertictactoe/widgets/custom_text_filed.dart';
 
-class JoinRoomScreen extends StatelessWidget {
+class JoinRoomScreen extends StatefulWidget {
   const JoinRoomScreen({super.key});
+
+  @override
+  State<JoinRoomScreen> createState() => _JoinRoomScreenState();
+}
+
+class _JoinRoomScreenState extends State<JoinRoomScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _roomIdController = TextEditingController();
+  final SocketMethods _socket = SocketMethods();
+
+  @override
+  void initState() {
+    super.initState();
+    _socket.joinRoomSuccessListener(context);
+    _socket.errorOccurredListener(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +41,31 @@ class JoinRoomScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 40.0),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: CustomTextEditField(
+                controller: _roomIdController,
                 hintText: "Enter your room ID,",
               ),
             ),
             const SizedBox(height: 20.0),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: CustomTextEditField(
                 hintText: "Enter your game name,",
+                controller: _nameController,
               ),
             ),
             const SizedBox(height: 20.0),
-            AppButton(onPressed: () {}, text: "Join"),
+            AppButton(
+              onPressed: () {
+                _socket.joinRoom(
+                  roomId: _roomIdController.text.trim(),
+                  nickname: _nameController.text.trim(),
+                );
+              },
+              text: "Join",
+            ),
           ],
         ),
       ),

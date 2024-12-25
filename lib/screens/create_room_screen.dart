@@ -40,7 +40,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
             ),
             const SizedBox(height: 40.0),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: CustomTextEditField(
                 controller: _nameController,
                 hintText: "Enter your game name,",

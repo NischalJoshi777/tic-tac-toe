@@ -29,7 +29,6 @@ io.on('connection', (socket) =>
                 };
                 room.players.push(player);
                 room.turn = player;
-
                 room = await room.save(); //data saved in mongodb
                 console.log(room);
                 const roomId = room._id.toString(); // a unique id created my the mongodb.  
@@ -38,6 +37,38 @@ io.on('connection', (socket) =>
               } catch (e) {
                 console.log(e);
               }
+        });
+
+        socket.on('joinRoom', async ({nickname, roomId})=> {
+          try{
+            if (!roomId.match(/^[0-9a-fA-F]{24}$/)) {
+             socket.emit("errorOccurred", "Please enter a valid room ID.");
+               return;
+            }
+            let room = await Room.findById(roomId);
+         if (room.canJoin) {
+          let playerO = {
+            nickname,
+            socketID: socket.id,
+            playerType: "O",
+          }
+          console.log(playerO.socketID);
+          socket.join(roomId);
+          room.players.push(playerO);
+          room.canJoin = false;
+          room = await room.save();
+          io.to(roomId).emit("joinRoomSuccess", room);
+          io.to(roomId).emit("updatePlayers", room.players);
+
+        } else {
+          socket.emit(
+            "errorOccurred",
+            "The game is in progress, try again later."
+          );
+        }
+          } catch(e){
+             console.log(e.toString);
+          }
         });
 
     }

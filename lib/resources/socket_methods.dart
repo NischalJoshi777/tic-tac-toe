@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:multiplayertictactoe/resources/socket_client.dart';
 import 'package:multiplayertictactoe/routes.dart';
+import 'package:multiplayertictactoe/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -23,12 +24,28 @@ class SocketMethods {
     }
   }
 
-  //LISTENERS
+  //CREATE ROOM SUCCESS LISTENERS
   void createRoomSuccessListener(BuildContext context) {
     _client.on('createRoomSuccess', (room) {
-      Navigator.pushNamed(context, RouteName.gameScreen);
       Provider.of<RoomDetailsProvider>(context, listen: false)
           .updateRooData(room);
+      Navigator.pushNamed(context, RouteName.gameScreen);
+    });
+  }
+
+  //JOIN ROOM SUCESS LISTENERS
+  void joinRoomSuccessListener(BuildContext context) {
+    _client.on('joinRoomSuccess', (room) {
+      Provider.of<RoomDetailsProvider>(context, listen: false)
+          .updateRooData(room);
+      Navigator.pushNamed(context, RouteName.gameScreen);
+    });
+  }
+
+  //ERROR LISTENERS
+  void errorOccurredListener(BuildContext context) {
+    _client.on('errorOccurred', (error) {
+      showSnackBar(context, error);
     });
   }
 

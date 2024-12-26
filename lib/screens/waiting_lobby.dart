@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multiplayertictactoe/providers/room_details_provider.dart';
+import 'package:multiplayertictactoe/helper/room_details_provider.dart';
 import 'package:multiplayertictactoe/widgets/app_header_text.dart';
 import 'package:multiplayertictactoe/widgets/custom_text_filed.dart';
 import 'package:provider/provider.dart';

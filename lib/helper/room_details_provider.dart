@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:multiplayertictactoe/player/player.dart';
+import 'package:multiplayertictactoe/model/player.dart';
 
 class RoomDetailsProvider extends ChangeNotifier {
+  final List<String> _displayElements = ['', '', '', '', '', '', '', '', ''];
+  int _filledBoxes = 0;
+
+  int get filledBoxes => _filledBoxes;
+
   Map<String, dynamic> _roomData = {};
   Player _player1 = Player(
     nickname: '',
@@ -22,6 +27,7 @@ class RoomDetailsProvider extends ChangeNotifier {
   Player get player2 => _player2;
 
   Map<String, dynamic> get roomData => _roomData;
+  List<String> get displayElements => _displayElements;
 
   void updateRooData(Map<String, dynamic> roomData) {
     _roomData = roomData;
@@ -35,6 +41,17 @@ class RoomDetailsProvider extends ChangeNotifier {
 
   void updatePlayer2Details(Map<String, dynamic> player2) {
     _player2 = Player.fromMap(player2);
+    notifyListeners();
+  }
+
+  void updateDisplayElement(int index, String choice) {
+    _displayElements[index] = choice;
+    _filledBoxes += 1;
+    notifyListeners();
+  }
+
+  void setFilledBoxValue(int value) {
+    _filledBoxes = value;
     notifyListeners();
   }
 }

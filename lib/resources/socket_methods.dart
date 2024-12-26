@@ -1,18 +1,20 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:multiplayertictactoe/helper/mp_game_helper.dart';
+import 'package:multiplayertictactoe/helper/utils.dart';
 import 'package:multiplayertictactoe/resources/socket_client.dart';
 import 'package:multiplayertictactoe/routes.dart';
-import 'package:multiplayertictactoe/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-import '../providers/room_details_provider.dart';
+import '../helper/room_details_provider.dart';
 
 class SocketMethods {
   final Socket _client = SocketClient
       .instance.socket!; //Taking the single instance of the socket client.
 
+  Socket get client => _client;
   void createRoom({required String nickname}) {
     try {
       _client.emit('createRoom', {
@@ -65,6 +67,47 @@ class SocketMethods {
     });
   }
 
+  void gridTapped(int index, String roomId, List<String> boardItems) {
+    if (boardItems[index] == "") {
+      _client.emit('tap', {
+        "index": index,
+        "roomId": roomId,
+      });
+    }
+  }
+
+  void gridTapListener(BuildContext context) {
+    _client.on('tapped', (data) {
+      final roomDetailsProvider =
+          Provider.of<RoomDetailsProvider>(context, listen: false);
+      roomDetailsProvider.updateDisplayElement(
+        data['index'],
+        data['choice'],
+      );
+      roomDetailsProvider.updateRooData(data['room']);
+      MpGameHelper().checkWinner(context, client);
+    });
+  }
+
+  void pointIncreaseListener(BuildContext context) {
+    _client.on('pointIncrease', (playerData) {
+      var roomDetails =
+          Provider.of<RoomDetailsProvider>(context, listen: false);
+      if (playerData['socketID'] == roomDetails.player1.socketID) {
+        roomDetails.updatePlayer1Details(playerData);
+      } else {
+        roomDetails.updatePlayer2Details(playerData);
+      }
+    });
+  }
+
+  void endGameListener(BuildContext context) {
+    client.on('endGame', (playerData) {
+      showDialogBox(context, '${playerData['nickname']} won the game!');
+      Navigator.popUntil(context, (route) => false);
+    });
+  }
+
   void joinRoom({
     required String roomId,
     required String nickname,
@@ -78,8 +121,4 @@ class SocketMethods {
       throw Exception(e.toString());
     }
   }
-
-  void Xturn(int index) {}
-
-  void Oturn(int index) {}
 }

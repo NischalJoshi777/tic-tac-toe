@@ -17,11 +17,11 @@ class _MultiplayerTicTacToeBoardState extends State<MultiplayerTicTacToeBoard> {
   @override
   void initState() {
     super.initState();
-    _methods.gridTapListener(context);
+    _methods.tappedListener(context);
   }
 
   void onTapped(int index, RoomDetailsProvider roomDetailProvider) {
-    _methods.gridTapped(
+    _methods.tapGrid(
       index,
       roomDetailProvider.roomData['_id'],
       roomDetailProvider.displayElements,
@@ -41,7 +41,7 @@ class _MultiplayerTicTacToeBoardState extends State<MultiplayerTicTacToeBoard> {
       ),
       child: AbsorbPointer(
         absorbing: roomDetailsProvider.roomData['turn']['socketID'] !=
-            _methods.client.id,
+            _methods.socketClient.id,
         child: GridView.builder(
           itemCount: 9,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

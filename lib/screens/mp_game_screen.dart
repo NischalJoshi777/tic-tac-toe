@@ -20,7 +20,7 @@ class _MultiPlayerGameScreenState extends State<MultiPlayerGameScreen> {
   void initState() {
     super.initState();
     _methods.updateRoomListener(context);
-    _methods.updatePlayersListener(context);
+    _methods.updatePlayersStateListener(context);
     _methods.pointIncreaseListener(context);
     _methods.endGameListener(context);
   }
@@ -28,23 +28,19 @@ class _MultiPlayerGameScreenState extends State<MultiPlayerGameScreen> {
   @override
   Widget build(BuildContext context) {
     final roomProvider = Provider.of<RoomDetailsProvider>(context);
-    return roomProvider.roomData['canJoin']
-        ? const WaitingLobby()
-        : SafeArea(
-            child: Scaffold(
-              body: Column(
+    return Scaffold(
+      body: roomProvider.roomData['canJoin']
+          ? const WaitingLobby()
+          : SafeArea(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Scoreboard(),
-                  const Expanded(
-                    flex: 2,
-                    child: MultiplayerTicTacToeBoard(),
-                  ),
+                  const MultiplayerTicTacToeBoard(),
                   Text('${roomProvider.roomData['turn']['nickname']}\'s turn'),
                 ],
               ),
             ),
-          );
+    );
   }
 }

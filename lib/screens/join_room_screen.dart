@@ -20,8 +20,8 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
   void initState() {
     super.initState();
     _socket.joinRoomSuccessListener(context);
-    _socket.errorOccurredListener(context);
-    _socket.updatePlayersListener(context);
+    _socket.errorOccuredListener(context);
+    _socket.updatePlayersStateListener(context);
   }
 
   @override
@@ -61,8 +61,8 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
             AppButton(
               onPressed: () {
                 _socket.joinRoom(
-                  roomId: _roomIdController.text.trim(),
-                  nickname: _nameController.text.trim(),
+                  _nameController.text.trim(),
+                  _roomIdController.text.trim(),
                 );
               },
               text: "Join",

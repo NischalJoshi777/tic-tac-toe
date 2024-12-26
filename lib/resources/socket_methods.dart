@@ -1,124 +1,115 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:multiplayertictactoe/helper/mp_game_helper.dart';
+import 'package:multiplayertictactoe/helper/room_details_provider.dart';
 import 'package:multiplayertictactoe/helper/utils.dart';
 import 'package:multiplayertictactoe/resources/socket_client.dart';
 import 'package:multiplayertictactoe/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-import '../helper/room_details_provider.dart';
-
 class SocketMethods {
-  final Socket _client = SocketClient
-      .instance.socket!; //Taking the single instance of the socket client.
+  final _socketClient = SocketClient.instance.socket!;
 
-  Socket get client => _client;
-  void createRoom({required String nickname}) {
-    try {
-      _client.emit('createRoom', {
+  Socket get socketClient => _socketClient;
+
+  // EMITS
+  void createRoom(String nickname) {
+    if (nickname.isNotEmpty) {
+      _socketClient.emit('createRoom', {
         'nickname': nickname,
       });
-    } catch (e) {
-      log(e.toString()); //printing what the exception is
-      throw Exception(e.toString());
     }
   }
 
-  //CREATE ROOM SUCCESS LISTENERS
+  void joinRoom(String nickname, String roomId) {
+    if (nickname.isNotEmpty && roomId.isNotEmpty) {
+      _socketClient.emit('joinRoom', {
+        'nickname': nickname,
+        'roomId': roomId,
+      });
+    }
+  }
+
+  void tapGrid(int index, String roomId, List<String> displayElements) {
+    if (displayElements[index] == '') {
+      _socketClient.emit('tap', {
+        'index': index,
+        'roomId': roomId,
+      });
+    }
+  }
+
+  // LISTENERS
   void createRoomSuccessListener(BuildContext context) {
-    _client.on('createRoomSuccess', (room) {
+    _socketClient.on('createRoomSuccess', (room) {
       Provider.of<RoomDetailsProvider>(context, listen: false)
-          .updateRooData(room);
+          .updateRoomData(room);
       Navigator.pushNamed(context, RouteName.gameScreen);
     });
   }
 
-  //JOIN ROOM SUCESS LISTENERS
   void joinRoomSuccessListener(BuildContext context) {
-    _client.on('joinRoomSuccess', (room) {
+    _socketClient.on('joinRoomSuccess', (room) {
       Provider.of<RoomDetailsProvider>(context, listen: false)
-          .updateRooData(room);
+          .updateRoomData(room);
       Navigator.pushNamed(context, RouteName.gameScreen);
     });
   }
 
-  //ERROR LISTENERS
-  void errorOccurredListener(BuildContext context) {
-    _client.on('errorOccurred', (error) {
-      showSnackBar(context, error);
+  void errorOccuredListener(BuildContext context) {
+    _socketClient.on('errorOccurred', (data) {
+      showSnackBar(context, data);
     });
   }
 
-  void updatePlayersListener(BuildContext context) {
-    _client.on('updatePlayers', (players) {
-      Provider.of<RoomDetailsProvider>(context, listen: false)
-          .updatePlayer1Details(players[0]);
-      Provider.of<RoomDetailsProvider>(context, listen: false)
-          .updatePlayer2Details(players[1]);
+  void updatePlayersStateListener(BuildContext context) {
+    _socketClient.on('updatePlayers', (playerData) {
+      Provider.of<RoomDetailsProvider>(context, listen: false).updatePlayer1(
+        playerData[0],
+      );
+      Provider.of<RoomDetailsProvider>(context, listen: false).updatePlayer2(
+        playerData[1],
+      );
     });
   }
 
   void updateRoomListener(BuildContext context) {
-    _client.on('updateRoom', (roomData) {
+    _socketClient.on('updateRoom', (data) {
       Provider.of<RoomDetailsProvider>(context, listen: false)
-          .updateRooData(roomData);
+          .updateRoomData(data);
     });
   }
 
-  void gridTapped(int index, String roomId, List<String> boardItems) {
-    if (boardItems[index] == "") {
-      _client.emit('tap', {
-        "index": index,
-        "roomId": roomId,
-      });
-    }
-  }
-
-  void gridTapListener(BuildContext context) {
-    _client.on('tapped', (data) {
-      final roomDetailsProvider =
+  void tappedListener(BuildContext context) {
+    _socketClient.on('tapped', (data) {
+      RoomDetailsProvider roomDataProvider =
           Provider.of<RoomDetailsProvider>(context, listen: false);
-      roomDetailsProvider.updateDisplayElement(
+      roomDataProvider.updateDisplayElements(
         data['index'],
         data['choice'],
       );
-      roomDetailsProvider.updateRooData(data['room']);
-      MpGameHelper().checkWinner(context, client);
+      roomDataProvider.updateRoomData(data['room']);
+      // check winnner
+      MpGameHelper().checkWinner(context, _socketClient);
     });
   }
 
   void pointIncreaseListener(BuildContext context) {
-    _client.on('pointIncrease', (playerData) {
-      var roomDetails =
+    _socketClient.on('pointIncrease', (playerData) {
+      var roomDataProvider =
           Provider.of<RoomDetailsProvider>(context, listen: false);
-      if (playerData['socketID'] == roomDetails.player1.socketID) {
-        roomDetails.updatePlayer1Details(playerData);
+      if (playerData['socketID'] == roomDataProvider.player1.socketID) {
+        roomDataProvider.updatePlayer1(playerData);
       } else {
-        roomDetails.updatePlayer2Details(playerData);
+        roomDataProvider.updatePlayer2(playerData);
       }
     });
   }
 
   void endGameListener(BuildContext context) {
-    client.on('endGame', (playerData) {
+    _socketClient.on('endGame', (playerData) {
       showDialogBox(context, '${playerData['nickname']} won the game!');
       Navigator.popUntil(context, (route) => false);
     });
-  }
-
-  void joinRoom({
-    required String roomId,
-    required String nickname,
-  }) {
-    try {
-      _client.emit('joinRoom', {
-        "nickname": nickname,
-        "roomId": roomId,
-      });
-    } catch (e) {
-      throw Exception(e.toString());
-    }
   }
 }

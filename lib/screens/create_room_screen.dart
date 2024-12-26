@@ -49,7 +49,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
             const SizedBox(height: 20.0),
             AppButton(
                 onPressed: () {
-                  _methods.createRoom(nickname: _nameController.text);
+                  _methods.createRoom(_nameController.text);
                 },
                 text: "CREATE"),
           ],

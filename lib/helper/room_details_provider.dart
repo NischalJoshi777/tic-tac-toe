@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:multiplayertictactoe/model/player.dart';
 
 class RoomDetailsProvider extends ChangeNotifier {
-  final List<String> _displayElements = ['', '', '', '', '', '', '', '', ''];
-  int _filledBoxes = 0;
-
-  int get filledBoxes => _filledBoxes;
-
   Map<String, dynamic> _roomData = {};
+  List<String> _displayElement = ['', '', '', '', '', '', '', '', ''];
+  int _filledBoxes = 0;
   Player _player1 = Player(
     nickname: '',
     socketID: '',
@@ -22,36 +19,34 @@ class RoomDetailsProvider extends ChangeNotifier {
     playerType: 'O',
   );
 
+  Map<String, dynamic> get roomData => _roomData;
+  List<String> get displayElements => _displayElement;
+  int get filledBoxes => _filledBoxes;
   Player get player1 => _player1;
-
   Player get player2 => _player2;
 
-  Map<String, dynamic> get roomData => _roomData;
-  List<String> get displayElements => _displayElements;
-
-  void updateRooData(Map<String, dynamic> roomData) {
-    _roomData = roomData;
+  void updateRoomData(Map<String, dynamic> data) {
+    _roomData = data;
     notifyListeners();
   }
 
-  void updatePlayer1Details(Map<String, dynamic> player1) {
-    _player1 = Player.fromMap(player1);
+  void updatePlayer1(Map<String, dynamic> player1Data) {
+    _player1 = Player.fromMap(player1Data);
     notifyListeners();
   }
 
-  void updatePlayer2Details(Map<String, dynamic> player2) {
-    _player2 = Player.fromMap(player2);
+  void updatePlayer2(Map<String, dynamic> player2Data) {
+    _player2 = Player.fromMap(player2Data);
     notifyListeners();
   }
 
-  void updateDisplayElement(int index, String choice) {
-    _displayElements[index] = choice;
+  void updateDisplayElements(int index, String choice) {
+    _displayElement[index] = choice;
     _filledBoxes += 1;
     notifyListeners();
   }
 
-  void setFilledBoxValue(int value) {
-    _filledBoxes = value;
-    notifyListeners();
+  void setFilledBoxesTo0() {
+    _filledBoxes = 0;
   }
 }

@@ -49,6 +49,22 @@ class SocketMethods {
     });
   }
 
+  void updatePlayersListener(BuildContext context) {
+    _client.on('updatePlayers', (players) {
+      Provider.of<RoomDetailsProvider>(context, listen: false)
+          .updatePlayer1Details(players[0]);
+      Provider.of<RoomDetailsProvider>(context, listen: false)
+          .updatePlayer2Details(players[1]);
+    });
+  }
+
+  void updateRoomListener(BuildContext context) {
+    _client.on('updateRoom', (roomData) {
+      Provider.of<RoomDetailsProvider>(context, listen: false)
+          .updateRooData(roomData);
+    });
+  }
+
   void joinRoom({
     required String roomId,
     required String nickname,

@@ -1,14 +1,8 @@
 # multiplayertictactoe
-A multiplayer tic tac toe game in Flutter that can be played online.
-## Getting Started
+A multiplayer tic tac toe game in Flutter that can be played locally and online.
+The application uses socket connection for realtime score update in both the devices. 
+The locally playable game is designed simply using set state. 
+The multiplayer online game uses provider as the state management tool.
+For server Node.js, MongoDB and Socket.io is used. 
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

@@ -31,52 +31,42 @@ class _MultiplayerTicTacToeBoardState extends State<MultiplayerTicTacToeBoard> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     RoomDetailsProvider roomDetailsProvider =
         Provider.of<RoomDetailsProvider>(context);
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: size.height * 0.7,
-        maxWidth: 500,
-      ),
-      child: AbsorbPointer(
-        absorbing: roomDetailsProvider.roomData['turn']['socketID'] !=
-            _methods.socketClient.id,
-        child: GridView.builder(
-          itemCount: 9,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 8.0,
-            crossAxisSpacing: 8.0,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () => onTapped(index, roomDetailsProvider),
-              child: Container(
-                color: Colors.white24,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white24,
-                  ),
-                ),
-                child: Center(
-                  child: AppHeaderText(
-                    text: roomDetailsProvider.displayElements[index],
-                    shadow: [
-                      Shadow(
-                        blurRadius: 40.0,
-                        color: roomDetailsProvider.displayElements[index] == 'O'
-                            ? Colors.red
-                            : Colors.blue,
-                      ),
-                    ],
-                  ),
+    return AbsorbPointer(
+      absorbing: roomDetailsProvider.roomData['turn']['socketID'] !=
+          _methods.socketClient.id,
+      child: GridView.builder(
+        itemCount: 9,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 8.0,
+          crossAxisSpacing: 8.0,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () => onTapped(index, roomDetailsProvider),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white24, width: 5.0),
+              ),
+              child: Center(
+                child: AppHeaderText(
+                  text: roomDetailsProvider.displayElements[index],
+                  shadow: [
+                    Shadow(
+                      blurRadius: 40.0,
+                      color: roomDetailsProvider.displayElements[index] == 'O'
+                          ? Colors.red
+                          : Colors.blue,
+                    ),
+                  ],
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

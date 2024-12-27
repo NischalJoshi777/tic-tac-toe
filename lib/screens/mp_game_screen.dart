@@ -36,10 +36,15 @@ class _MultiPlayerGameScreenState extends State<MultiPlayerGameScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40.0),
+                  const SizedBox(height: 20.0),
                   const AppHeaderText(text: 'LET\'S PLAY'),
                   _buildTurnText(context, roomProvider),
-                  const MultiplayerTicTacToeBoard(),
+                  const SizedBox(height: 20.0),
+                  const Expanded(
+                    flex: 2,
+                    child: MultiplayerTicTacToeBoard(),
+                  ),
+                  const SizedBox(height: 20.0),
                   const Scoreboard(),
                 ],
               ),
@@ -54,14 +59,14 @@ class _MultiPlayerGameScreenState extends State<MultiPlayerGameScreen> {
       style: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.bold,
-        color: roomProvider.roomData['turn']['playerType'] == 'O'
-            ? Colors.red
-            : Colors.blue,
-        shadows: const [
+        color: Colors.white,
+        shadows: [
           BoxShadow(
-            color: Colors.white,
-            spreadRadius: 20.0,
-            blurRadius: 40.0,
+            color: roomProvider.roomData['turn']['playerType'] == 'O'
+                ? Colors.red
+                : Colors.blue,
+            spreadRadius: 40.0,
+            blurRadius: 20.0,
           ),
         ],
       ),

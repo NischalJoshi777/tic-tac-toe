@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multiplayertictactoe/helper/room_details_provider.dart';
 import 'package:multiplayertictactoe/resources/socket_methods.dart';
+import 'package:multiplayertictactoe/widgets/app_header_text.dart';
 import 'package:provider/provider.dart';
 
 class MultiplayerTicTacToeBoard extends StatefulWidget {
@@ -46,36 +47,30 @@ class _MultiplayerTicTacToeBoardState extends State<MultiplayerTicTacToeBoard> {
           itemCount: 9,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
+            mainAxisSpacing: 8.0,
+            crossAxisSpacing: 8.0,
           ),
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () => onTapped(index, roomDetailsProvider),
               child: Container(
+                color: Colors.white24,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.white24,
                   ),
                 ),
                 child: Center(
-                  child: AnimatedSize(
-                    duration: const Duration(milliseconds: 200),
-                    child: Text(
-                      roomDetailsProvider.displayElements[index],
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 60.0,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 40.0,
-                              color:
-                                  roomDetailsProvider.displayElements[index] ==
-                                          'O'
-                                      ? Colors.red
-                                      : Colors.blue,
-                            ),
-                          ]),
-                    ),
+                  child: AppHeaderText(
+                    text: roomDetailsProvider.displayElements[index],
+                    shadow: [
+                      Shadow(
+                        blurRadius: 40.0,
+                        color: roomDetailsProvider.displayElements[index] == 'O'
+                            ? Colors.red
+                            : Colors.blue,
+                      ),
+                    ],
                   ),
                 ),
               ),

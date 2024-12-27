@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multiplayertictactoe/helper/room_details_provider.dart';
+import 'package:multiplayertictactoe/widgets/app_header_text.dart';
 import 'package:provider/provider.dart';
 
 class Scoreboard extends StatelessWidget {
@@ -18,12 +19,8 @@ class Scoreboard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                roomDataProvider.player1.nickname,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              AppHeaderText(
+                text: roomDataProvider.player1.nickname,
               ),
               Text(
                 roomDataProvider.player1.points.toInt().toString(),
@@ -40,12 +37,15 @@ class Scoreboard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                roomDataProvider.player2.nickname,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              AppHeaderText(
+                text: roomDataProvider.player2.nickname,
+                shadow: const [
+                  BoxShadow(
+                    color: Colors.red,
+                    spreadRadius: 40.0,
+                    blurRadius: 20.0,
+                  ),
+                ],
               ),
               Text(
                 roomDataProvider.player2.points.toInt().toString(),

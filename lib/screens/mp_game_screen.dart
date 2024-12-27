@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multiplayertictactoe/helper/room_details_provider.dart';
 import 'package:multiplayertictactoe/resources/socket_methods.dart';
 import 'package:multiplayertictactoe/screens/waiting_lobby.dart';
+import 'package:multiplayertictactoe/widgets/app_header_text.dart';
 import 'package:multiplayertictactoe/widgets/mp_tictactoe_board.dart';
 import 'package:multiplayertictactoe/widgets/score_board.dart';
 import 'package:provider/provider.dart';
@@ -35,12 +36,35 @@ class _MultiPlayerGameScreenState extends State<MultiPlayerGameScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Scoreboard(),
+                  const SizedBox(height: 40.0),
+                  const AppHeaderText(text: 'LET\'S PLAY'),
+                  _buildTurnText(context, roomProvider),
                   const MultiplayerTicTacToeBoard(),
-                  Text('${roomProvider.roomData['turn']['nickname']}\'s turn'),
+                  const Scoreboard(),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildTurnText(
+      BuildContext context, RoomDetailsProvider roomProvider) {
+    return Text(
+      '${roomProvider.roomData['turn']['nickname']}\'s turn',
+      style: TextStyle(
+        fontSize: 24.0,
+        fontWeight: FontWeight.bold,
+        color: roomProvider.roomData['turn']['playerType'] == 'O'
+            ? Colors.red
+            : Colors.blue,
+        shadows: const [
+          BoxShadow(
+            color: Colors.white,
+            spreadRadius: 20.0,
+            blurRadius: 40.0,
+          ),
+        ],
+      ),
     );
   }
 }
